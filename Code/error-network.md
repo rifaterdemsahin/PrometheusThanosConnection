@@ -238,3 +238,69 @@ services:
 networks:
   code_default:
     external: true
+-----------------
+@rifaterdemsahin ➜ /workspaces/PrometheusThanosConnection (main) $ docker ps
+CONTAINER ID   IMAGE                           COMMAND                  CREATED              STATUS              PORTS                                       NAMES
+de5f64806df8   quay.io/thanos/thanos:v0.35.1   "/bin/thanos query -…"   About a minute ago   Up About a minute   0.0.0.0:9091->9091/tcp, :::9091->9091/tcp   code-thanos-query-1
+da4de63ee7c5   busybox                         "sh -c 'while true; …"   About a minute ago   Up About a minute                                               code-busybox-1
+2556f38a8791   prom/prometheus:latest          "/bin/prometheus --c…"   About a minute ago   Up About a minute   0.0.0.0:9090->9090/tcp, :::9090->9090/tcp   code-prometheus-1
+@rifaterdemsahin ➜ /workspaces/PrometheusThanosConnection (main) $ docker network inspect code_default
+[
+    {
+        "Name": "code_default",
+        "Id": "3c47ae23d910e64cd6931c3ae01cdecc0c26e3cb30d5fb4deee8a964f1ab13c0",
+        "Created": "2024-10-03T13:30:22.267494161Z",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": null,
+            "Config": [
+                {
+                    "Subnet": "172.18.0.0/16",
+                    "Gateway": "172.18.0.1"
+                }
+            ]
+        },
+        "Internal": false,
+        "Attachable": false,
+        "Ingress": false,
+        "ConfigFrom": {
+            "Network": ""
+        },
+        "ConfigOnly": false,
+        "Containers": {
+            "2556f38a879125dac64f9238536f47dd6bfb9eb439cbfd351bdb1d2388f64e8a": {
+                "Name": "code-prometheus-1",
+                "EndpointID": "88db3efd27fa4c1a4d8b4f8a7f2abb1217f07c8ae1896685ef4eb1a16ae14f8a",
+                "MacAddress": "02:42:ac:12:00:03",
+                "IPv4Address": "172.18.0.3/16",
+                "IPv6Address": ""
+            },
+            "da4de63ee7c563e2380abb4572c329685b3288e0682e1d8a96081c71e8c0888b": {
+                "Name": "code-busybox-1",
+                "EndpointID": "8e7d920a08db35efe4ea69bc2cdc01b90aaa680826d7366ae9e88399c0b1d951",
+                "MacAddress": "02:42:ac:12:00:04",
+                "IPv4Address": "172.18.0.4/16",
+                "IPv6Address": ""
+            },
+            "de5f64806df803c9784f4d14d1d903383ba4317b3e838c67352d9c3648346aed": {
+                "Name": "code-thanos-query-1",
+                "EndpointID": "cfb0bf04240b8c6cb4c77cb0778130ff161530f4f9e0a07f8080fd18a34d410e",
+                "MacAddress": "02:42:ac:12:00:02",
+                "IPv4Address": "172.18.0.2/16",
+                "IPv6Address": ""
+            }
+        },
+        "Options": {},
+        "Labels": {
+            "com.docker.compose.network": "default",
+            "com.docker.compose.project": "code",
+            "com.docker.compose.version": "2.29.7"
+        }
+    }
+]
+@rifaterdemsahin ➜ /workspaces/PrometheusThanosConnection (main) $ 
+------------------------------
+

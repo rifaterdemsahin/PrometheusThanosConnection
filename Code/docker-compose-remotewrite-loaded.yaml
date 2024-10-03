@@ -18,6 +18,7 @@ services:
       - --prometheus.url=http://prometheus:9090
       - --grpc-address=0.0.0.0:10921
       - --http-address=0.0.0.0:10922
+      - --log.level=debug
     volumes:
       - ./prometheus-data:/var/prometheus
     depends_on:
@@ -35,6 +36,7 @@ services:
       - --http-address=0.0.0.0:9091
       - --store=thanos-sidecar:10921
       - --store=thanos-receive:10921
+      - --log.level=debug
     depends_on:
       - thanos-sidecar
       - thanos-receive
@@ -50,6 +52,7 @@ services:
       - --http-address=0.0.0.0:10902
       - --grpc-address=0.0.0.0:10921
       - --remote-write.address=0.0.0.0:19291
+      - --log.level=debug
     ports:
       - "10921:10921"
       - "10902:10902"
