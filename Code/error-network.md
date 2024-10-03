@@ -317,3 +317,95 @@ network code_default declared as external, but could not be found
 
 -------------
 
+To run your Docker Compose setup out of the box with Codespaces, you can simplify the network configuration and ensure everything is set up correctly. Here's an updated version of your `docker-compose-remotewrite-loaded.yaml` file that should work seamlessly in Codespaces:
+
+```yaml
+version: '3.7'
+
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus-remotewrite-loaded.yml:/etc/prometheus/prometheus-remotewrite-loaded.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - code_default
+
+  thanos-sidecar:
+    image: quay.io/thanos/thanos:v0.35.1
+    command:
+      - sidecar
+      - --tsdb.path=/var/prometheus
+      - --prometheus.url=http://prometheus:9090
+      - --grpc-address=0.0.0.0:10941
+      - --http-address=0.0.0.0:10942
+      - --log.level=debug
+    volumes:
+      - ./prometheus-data:/var/prometheus
+    depends_on:
+      - prometheus
+    ports:
+      - "10941:10941"
+      - "10942:10942"
+    networks:
+      - code_default
+
+  thanos-query:
+    image: quay.io/thanos/thanos:v0.35.1
+    command:
+      - query
+      - --http-address=0.0.0.0:9091
+      - --store=thanos-sidecar:10941
+      - --store=thanos-receive:10941
+      - --log.level=debug
+    depends_on:
+      - thanos-sidecar
+      - thanos-receive
+    ports:
+      - "9091:9091"
+    networks:
+      - code_default
+
+  thanos-receive:
+    image: quay.io/thanos/thanos:v0.35.1
+    command:
+      - receive
+      - --http-address=0.0.0.0:10902
+      - --grpc-address=0.0.0.0:10941
+      - --remote-write.address=0.0.0.0:19291
+      - --log.level=debug
+      - --label=receive_replica=myreplicalabel
+    ports:
+      - "10941:10941"
+      - "10902:10902"
+      - "19291:19291"
+    networks:
+      - code_default
+
+  busybox:
+    image: busybox
+    command: sh -c "while true; do echo 'Generating load'; sleep 1; done"
+    networks:
+      - code_default
+
+networks:
+  code_default:
+    driver: bridge
+```
+
+This configuration uses a bridge network, which is the default network driver in Docker and should work well in Codespaces.
+
+To run this setup in Codespaces, follow these steps:
+
+1. **Ensure Docker is Running**: Make sure Docker is running in your Codespace environment.
+
+2. **Navigate to Your Project Directory**: Open a terminal in your Codespace and navigate to the directory containing your `docker-compose-remotewrite-loaded.yaml` file.
+
+3. **Run Docker Compose**: Use the following command to start your services:
+   ```sh
+   docker-compose -f docker-compose-remotewrite-loaded.yaml up -d
+   ```
+
+This should bring up all your services without any network issues. Let me know if you encounter any other problems or need further assistance!
+

@@ -69,4 +69,4 @@ services:
 
 networks:
   code_default:
-    external: true
+    driver: bridge
