@@ -1,0 +1,36 @@
+version: '3.7'
+
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+
+  thanos-sidecar:
+    image: quay.io/thanos/thanos:latest
+    command:
+      - sidecar
+      - --tsdb.path=/var/prometheus
+      - --prometheus.url=http://prometheus:9090
+      - --grpc-address=0.0.0.0:10901
+      - --http-address=0.0.0.0:10902
+    volumes:
+      - ./prometheus-data:/var/prometheus
+    depends_on:
+      - prometheus
+    ports:
+      - "10901:10901"
+      - "10902:10902"
+
+  thanos-query:
+    image: quay.io/thanos/thanos:latest
+    command:
+      - query
+      - --http-address=0.0.0.0:9091
+      - --store=thanos-sidecar:10901
+    depends_on:
+      - thanos-sidecar
+    ports:
+      - "9091:9091"
