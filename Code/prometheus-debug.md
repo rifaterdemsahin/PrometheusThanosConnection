@@ -54,3 +54,15 @@ docker-compose -f /workspaces/PrometheusThanosConnection/Code/docker-compose-rem
 ```
 
 By following these steps, you should be able to identify and resolve the issue preventing Prometheus from running. If you encounter specific errors in the logs, feel free to share them, and I can help you troubleshoot further! 🚀
+
+
+TRY FULL MAPPING
+![alt text](/Resources/pathyaml.png)
+
+It looks like you’re setting up Prometheus with a Docker container. The reason you need to make both sides the same in the volume mapping is to ensure that the configuration file (prometheus-remotewrite.yml) on your host machine is correctly mapped to the expected location inside the container.
+
+Here’s a breakdown of your configuration:
+
+Volumes: This maps the prometheus-remotewrite.yml file from your host machine (./prometheus-remotewrite.yml) to the container’s file system (/etc/prometheus/prometheus-remotewrite.yml). This ensures that Prometheus inside the container uses the configuration file you have on your host machine.
+Ports: This maps port 9090 on your host machine to port 9090 inside the container, allowing you to access Prometheus’s web interface from your host machine.
+By keeping the paths consistent, you ensure that Prometheus can find and use the configuration file correctly, which is crucial for its operation.
