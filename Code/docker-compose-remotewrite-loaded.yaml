@@ -1,5 +1,9 @@
 version: '3.7'
 
+networks:
+  default:
+    name: code_default
+
 services:
   prometheus:
     image: prom/prometheus:latest
@@ -7,6 +11,8 @@ services:
       - ./prometheus-remotewrite-loaded.yml:/etc/prometheus/prometheus-remotewrite-loaded.yml
     ports:
       - "9090:9090"
+    networks:
+      - default
 
   thanos-sidecar:
     image: quay.io/thanos/thanos:v0.35.1
@@ -17,6 +23,7 @@ services:
       - --grpc-address=0.0.0.0:10921
       - --http-address=0.0.0.0:10922
       - --log.level=debug
+
     volumes:
       - ./prometheus-data:/var/prometheus
     depends_on:
@@ -24,6 +31,8 @@ services:
     ports:
       - "10921:10921"
       - "10922:10922"
+    networks:
+      - default
 
   thanos-query:
     image: quay.io/thanos/thanos:v0.35.1
@@ -37,6 +46,8 @@ services:
       - thanos-receive
     ports:
       - "9091:9091"
+    networks:
+      - default
 
   thanos-receive:
     image: quay.io/thanos/thanos:v0.35.1
@@ -49,7 +60,11 @@ services:
       - "10921:10921"
       - "10902:10902"
       - "19291:19291"
+    networks:
+      - default
 
   busybox:
     image: busybox
     command: sh -c "while true; do echo 'Generating load'; sleep 1; done"
+    networks:
+      - default
