@@ -27,3 +27,21 @@ ts=2024-10-03T14:38:18.240080862Z caller=main.go:77 level=debug msg="maxprocs: L
 ts=2024-10-03T14:38:18.240957417Z caller=main.go:145 level=error err="invalid syntax\nunquote label value\nmain.parseFlagLabels\n\t/app/cmd/thanos/config.go:280\nmain.registerReceive.func1\n\t/app/cmd/thanos/receive.go:66\nmain.main\n\t/app/cmd/thanos/main.go:143\nruntime.main\n\t/usr/local/go/src/runtime/proc.go:267\nruntime.goexit\n\t/usr/local/go/src/runtime/asm_amd64.s:1650\nparse labels\nmain.registerReceive.func1\n\t/app/cmd/thanos/receive.go:68\nmain.main\n\t/app/cmd/thanos/main.go:143\nruntime.main\n\t/usr/local/go/src/runtime/proc.go:267\nruntime.goexit\n\t/usr/local/go/src/runtime/asm_amd64.s:1650\npreparing receive command failed\nmain.main\n\t/app/cmd/thanos/main.go:145\nruntime.main\n\t/usr/local/go/src/runtime/proc.go:267\nruntime.goexit\n\t/usr/local/go/src/runtime/asm_amd64.s:1650"
  *  Terminal will be reused by tasks, press any key to close it. 
 
+-------------------------------
+
+thanos-receive:
+  image: quay.io/thanos/thanos:v0.35.1
+  command:
+    - receive
+    - --http-address=0.0.0.0:10902
+    - --grpc-address=0.0.0.0:10941
+    - --remote-write.address=0.0.0.0:19291
+    - --log.level=debug
+    - --label=receive_replica=myreplicalabel
+  ports:
+    - "10902:10902"
+    - "19291:19291"
+  networks:
+    - code_default
+
+    
