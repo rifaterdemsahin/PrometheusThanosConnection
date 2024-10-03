@@ -62,6 +62,11 @@ scrape_configs:
 remote_write:
   - url: "http://thanos-sidecar:10901/api/v1/receive"
 ```
+# START
+docker-compose -f /workspaces/PrometheusThanosConnection/Code/docker-compose-remotewrite-loaded.yaml up -d
+
+# STOP
+docker-compose down -f /workspaces/PrometheusThanosConnection/Code/docker-compose-remotewrite-loaded.yaml
 
 ### Explanation
 - **Busybox Service**: This service runs a simple loop that generates load. You can replace this with any other container that generates metrics.
