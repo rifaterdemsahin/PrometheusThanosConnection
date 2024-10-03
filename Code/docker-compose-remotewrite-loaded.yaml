@@ -30,10 +30,24 @@ services:
       - query
       - --http-address=0.0.0.0:9091
       - --store=thanos-sidecar:10901
+      - --store=thanos-receive:10901
     depends_on:
       - thanos-sidecar
+      - thanos-receive
     ports:
       - "9091:9091"
+
+  thanos-receive:
+    image: quay.io/thanos/thanos:v0.35.1
+    command:
+      - receive
+      - --http-address=0.0.0.0:10902
+      - --grpc-address=0.0.0.0:10901
+      - --remote-write.address=0.0.0.0:19291
+    ports:
+      - "10901:10901"
+      - "10902:10902"
+      - "19291:19291"
 
   busybox:
     image: busybox
