@@ -117,3 +117,5 @@ iver failed programming external connectivity on endpoint code-thanos-sidecar-1 
 
 ----------------
 
+remove from query the port gpt could not do it
+![alt text](/Resources/error-remove-the-port-from-thanos-query.png.png)

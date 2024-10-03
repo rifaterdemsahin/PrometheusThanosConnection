@@ -55,7 +55,6 @@ services:
       - --log.level=debug
       - --label=receive_replica=myreplicalabel
     ports:
-      - "10941:10941"
       - "10902:10902"
       - "19291:19291"
     networks:
