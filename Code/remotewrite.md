@@ -81,6 +81,8 @@ scrape_configs:
 
     ```bash
     docker-compose up -d
+    docker-compose -f /workspaces/PrometheusThanosConnection/Code/docker-compose-remotewrite.yaml up -d
+
     ```
 
 2. **Verify the Setup**:
@@ -102,6 +104,8 @@ scrape_configs:
 
     ```bash
     docker-compose down
+    docker-compose -f /workspaces/PrometheusThanosConnection/Code/docker-compose-remotewrite.yaml down
+
     ```
 
 ### Conclusion
