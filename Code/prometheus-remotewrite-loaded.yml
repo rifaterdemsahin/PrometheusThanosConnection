@@ -6,6 +6,9 @@ global:
     - OpenMetricsText0.0.1
     - PrometheusText0.0.4
   evaluation_interval: 15s
+  external_labels:
+    cluster: 'mycluster'
+    replica: 'myreplica'
 
 runtime:
   gogc: 75
