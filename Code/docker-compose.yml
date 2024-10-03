@@ -9,7 +9,7 @@ services:
       - "9090:9090"
 
   thanos-sidecar:
-    image: quay.io/thanos/thanos:latest
+    image: quay.io/thanos/thanos:v0.35.1
     command:
       - sidecar
       - --tsdb.path=/var/prometheus
@@ -25,7 +25,7 @@ services:
       - "10902:10902"
 
   thanos-query:
-    image: quay.io/thanos/thanos:latest
+    image: quay.io/thanos/thanos:v0.35.1
     command:
       - query
       - --http-address=0.0.0.0:9091
