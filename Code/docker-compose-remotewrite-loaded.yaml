@@ -16,6 +16,7 @@ services:
       - --prometheus.url=http://prometheus:9090
       - --grpc-address=0.0.0.0:10921
       - --http-address=0.0.0.0:10922
+      - --log.level=debug
     volumes:
       - ./prometheus-data:/var/prometheus
     depends_on:
