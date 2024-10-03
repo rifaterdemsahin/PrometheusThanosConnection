@@ -4,7 +4,7 @@ services:
   prometheus:
     image: prom/prometheus:latest
     volumes:
-      - ./prometheus-remotewrite.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus-remotewrite.yml:/etc/prometheus/prometheus-remotewrite.yml
     ports:
       - "9090:9090"
 
