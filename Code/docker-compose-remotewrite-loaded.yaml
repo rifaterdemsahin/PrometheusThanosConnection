@@ -53,7 +53,7 @@ services:
       - --grpc-address=0.0.0.0:10941
       - --remote-write.address=0.0.0.0:19291
       - --log.level=debug
-      - --label='receive_replica="myreplicalabel"'
+      - --label=receive_replica=myreplicalabel
     ports:
       - "10941:10941"
       - "10902:10902"
