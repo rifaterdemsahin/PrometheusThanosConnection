@@ -66,7 +66,8 @@ remote_write:
 docker-compose -f /workspaces/PrometheusThanosConnection/Code/docker-compose-remotewrite-loaded.yaml up -d
 
 # STOP
-docker-compose down -f /workspaces/PrometheusThanosConnection/Code/docker-compose-remotewrite-loaded.yaml
+docker-compose -f /workspaces/PrometheusThanosConnection/Code/docker-compose-remotewrite-loaded.yaml down
+
 
 ### Explanation
 - **Busybox Service**: This service runs a simple loop that generates load. You can replace this with any other container that generates metrics.
