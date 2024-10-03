@@ -20,3 +20,10 @@ Here's the updated command for reference:
 ```
 
 Give this a try and let me know if it resolves the issue!
+----------
+ *  Executing task: docker logs --tail 1000 -f 7b9ceb27f4c53cb0769142aaeea6ab94c84a8a15ae98b149e58494b843939dfe 
+
+ts=2024-10-03T14:38:18.240080862Z caller=main.go:77 level=debug msg="maxprocs: Leaving GOMAXPROCS=[2]: CPU quota undefined"
+ts=2024-10-03T14:38:18.240957417Z caller=main.go:145 level=error err="invalid syntax\nunquote label value\nmain.parseFlagLabels\n\t/app/cmd/thanos/config.go:280\nmain.registerReceive.func1\n\t/app/cmd/thanos/receive.go:66\nmain.main\n\t/app/cmd/thanos/main.go:143\nruntime.main\n\t/usr/local/go/src/runtime/proc.go:267\nruntime.goexit\n\t/usr/local/go/src/runtime/asm_amd64.s:1650\nparse labels\nmain.registerReceive.func1\n\t/app/cmd/thanos/receive.go:68\nmain.main\n\t/app/cmd/thanos/main.go:143\nruntime.main\n\t/usr/local/go/src/runtime/proc.go:267\nruntime.goexit\n\t/usr/local/go/src/runtime/asm_amd64.s:1650\npreparing receive command failed\nmain.main\n\t/app/cmd/thanos/main.go:145\nruntime.main\n\t/usr/local/go/src/runtime/proc.go:267\nruntime.goexit\n\t/usr/local/go/src/runtime/asm_amd64.s:1650"
+ *  Terminal will be reused by tasks, press any key to close it. 
+

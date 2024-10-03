@@ -200,3 +200,9 @@ remote_write:
    ```
 
 This should resolve the issue with the Thanos sidecar. Let me know if you encounter any further issues or need additional assistance!
+
+
+------------
+
+fixed-after-prometheus configfileadded
+![alt text](/Resources/error-fixed-after-prometheusconfigfileadded.png)
