@@ -304,3 +304,16 @@ da4de63ee7c5   busybox                         "sh -c 'while true; …"   About 
 @rifaterdemsahin ➜ /workspaces/PrometheusThanosConnection (main) $ 
 ------------------------------
 
+@rifaterdemsahin ➜ /workspaces/PrometheusThanosConnection (main) $ docker-compose -f /workspaces/PrometheusThanosConnection/Code/docker-compose-remotewrite-loaded.yaml up -d
+WARN[0000] /workspaces/PrometheusThanosConnection/Code/docker-compose-remotewrite-loaded.yaml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion 
+[+] Running 20/5
+ ✔ thanos-sidecar Pulled                                                                                                                                             11.7s 
+ ✔ thanos-receive Pulled                                                                                                                                             11.8s 
+ ✔ thanos-query Pulled                                                                                                                                               11.7s 
+ ✔ busybox Pulled                                                                                                                                                     5.9s 
+ ✔ prometheus Pulled                                                                                                                                                 12.7s 
+network code_default declared as external, but could not be found
+@rifaterdemsahin ➜ /workspaces/PrometheusThanosConnection (main) $ 
+
+-------------
+
