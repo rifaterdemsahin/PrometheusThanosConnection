@@ -48,20 +48,20 @@ services:
     networks:
       - code_default
 
-thanos-receive:
-  image: quay.io/thanos/thanos:v0.35.1
-  command:
-    - receive
-    - --http-address=0.0.0.0:10902
-    - --grpc-address=0.0.0.0:10941
-    - --remote-write.address=0.0.0.0:19291
-    - --log.level=debug
-    - --label=receive_replica=myreplicalabel
-  ports:
-    - "10902:10902"
-    - "19291:19291"
-  networks:
-    - code_default
+  thanos-receive:
+    image: quay.io/thanos/thanos:v0.35.1
+    command:
+      - receive
+      - --http-address=0.0.0.0:10902
+      - --grpc-address=0.0.0.0:10941
+      - --remote-write.address=0.0.0.0:19291
+      - --log.level=debug
+      - --label=receive_replica=myreplicalabel
+    ports:
+      - "10902:10902"
+      - "19291:19291"
+    networks:
+      - code_default
 
   busybox:
     image: busybox
