@@ -16,16 +16,16 @@ services:
       - sidecar
       - --tsdb.path=/var/prometheus
       - --prometheus.url=http://prometheus:9090
-      - --grpc-address=0.0.0.0:10921
-      - --http-address=0.0.0.0:10922
+      - --grpc-address=0.0.0.0:10931
+      - --http-address=0.0.0.0:10932
       - --log.level=debug
     volumes:
       - ./prometheus-data:/var/prometheus
     depends_on:
       - prometheus
     ports:
-      - "10921:10921"
-      - "10922:10922"
+      - "10931:10931"
+      - "10932:10932"
     networks:
       - code_default
 
@@ -34,8 +34,8 @@ services:
     command:
       - query
       - --http-address=0.0.0.0:9091
-      - --store=thanos-sidecar:10921
-      - --store=thanos-receive:10921
+      - --store=thanos-sidecar:10931
+      - --store=thanos-receive:10931
       - --log.level=debug
     depends_on:
       - thanos-sidecar
@@ -50,11 +50,12 @@ services:
     command:
       - receive
       - --http-address=0.0.0.0:10902
-      - --grpc-address=0.0.0.0:10921
+      - --grpc-address=0.0.0.0:10931
       - --remote-write.address=0.0.0.0:19291
       - --log.level=debug
+      - --label=receive_replica=myreplicalabel
     ports:
-      - "10921:10921"
+      - "10931:10931"
       - "10902:10902"
       - "19291:19291"
     networks:
