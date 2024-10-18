@@ -1,0 +1,28 @@
+- Codespace
+- cloud-based development environments
+- depends_on
+- Docker
+- docker-compose up
+- docker-compose.yml
+- docker-compose down
+- GitHub Codespaces
+- metrics
+- Open with Codespaces
+- PoC
+- ports
+- Prometheus
+- Prometheus at http://localhost:9090
+- prometheus.url
+- prometheus.yml
+- quay.io/thanos/thanos:latest
+- repository
+- scrape_configs
+- scrape_interval
+- services
+- Setting Up a Proof of Concept Project with Prometheus and Thanos in GitHub Codespaces
+- sidecar
+- Thanos
+- Thanos Query at http://localhost:9091
+- tsdb.path
+- volumes
+- WordPress
