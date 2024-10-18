@@ -1,0 +1,1 @@
+Map of all the concepts in diagram as code. 
