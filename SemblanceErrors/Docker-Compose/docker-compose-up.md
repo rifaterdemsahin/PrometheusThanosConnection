@@ -1,3 +1,6 @@
+
+ docker-compose -f /workspaces/PrometheusThanosConnection/SymbolsCode/Docker/docker-compose.yml up -d
+
 @rifaterdemsahin ➜ /workspaces/PrometheusThanosConnection (main) $   docker-compose -f /workspaces/PrometheusThanosConnection/SymbolsCode/Docker/docker-compose.yml up -d
 WARN[0000] /workspaces/PrometheusThanosConnection/SymbolsCode/Docker/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion 
 [+] Running 17/3
