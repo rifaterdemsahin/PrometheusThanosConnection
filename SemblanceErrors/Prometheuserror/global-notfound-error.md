@@ -62,16 +62,15 @@ services:
 ======================================================================
 
 global:
-  global:
-    scrape_interval: 15s
-    external_labels:
-      cluster: 'your-cluster-name'
-      region: 'your-region'
+  scrape_interval: 15s
+  external_labels:
+    cluster: 'your-cluster-name'
+    region: 'your-region'
 
-  scrape_configs:
-    - job_name: 'prometheus'
-      static_configs:
-        - targets: ['localhost:9090']
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
 ======================================================================
 
 GPT OUTPUT
@@ -148,8 +147,8 @@ services:
 
 1. **Restart Docker Compose Services**:
    ```sh
-   docker-compose down
-   docker-compose up -d
+docker-compose -f /workspaces/PrometheusThanosConnection/SymbolsCode/Docker/docker-compose.yml down
+docker-compose -f /workspaces/PrometheusThanosConnection/SymbolsCode/Docker/docker-compose.yml up -d
    ```
 
 2. **Check Logs**:
