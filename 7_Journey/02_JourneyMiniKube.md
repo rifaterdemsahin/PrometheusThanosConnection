@@ -10,11 +10,13 @@ This guide will help you set up Thanos to connect directly to Prometheus for que
 
 ## Setup Instructions
 
+Swap back to codespaces
+
 1. Start Minikube:   ```sh
    minikube start   ```
 
    C:\projects\PrometheusThanosConnection\PrometheusThanosConnection\7_Journey\02_JourneyMiniKube_setup.sh
-   
+
 
 2. Apply the Kubernetes configurations:   ```sh
    kubectl apply -f prometheus-config.yaml
