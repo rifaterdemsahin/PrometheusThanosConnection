@@ -132,3 +132,36 @@ spec:
    ```
 
 Ensure the pod is running and the container is able to pull the image successfully.
+
+
+
+After update stiull the same error 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: thanos-sidecar
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: thanos-sidecar
+  template:
+    metadata:
+      labels:
+        app: thanos-sidecar
+    spec:
+      containers:
+      - name: thanos-sidecar
+        image: quay.io/thanos/thanos:v0.35.1  # Ensure this is the correct image and tag
+        args:
+        - sidecar
+        - --tsdb.path=/var/prometheus
+        - --prometheus.url=http://prometheus:9090
+        - --grpc-address=0.0.0.0:10901
+        - --http-address=0.0.0.0:10902
+        volumeMounts:
+        - name: prometheus-data
+          mountPath: /var/prometheus
+      volumes:
+      - name: prometheus-data
+        emptyDir: {}
