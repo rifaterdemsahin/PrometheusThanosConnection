@@ -11,6 +11,10 @@ This guide will help you set up Thanos to connect directly to Prometheus for que
 1. **Start Docker**
 
   Ensure Docker is running on your machine.
+  
+```
+  docker info
+```
 
 2. **Add Helm Repositories**
 
