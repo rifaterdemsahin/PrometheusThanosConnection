@@ -18,3 +18,9 @@ Missing
     volumes:
 
       - /workspaces/PrometheusThanosConnection/SymbolsCode/Docker/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+
+
+ ✔ Container docker-thanos-sidecar-1  Created                                                                                                                           0.0s 
+ ✔ Container docker-thanos-query-1    Created                                                                                                                           0.0s 
+Error response from daemon: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: error mounting "/workspaces/PrometheusThanosConnection/SymbolsCode/Docker/Configuration/prometheus.yml" to rootfs at "/etc/prometheus/prometheus.yml": create mount destination for /etc/prometheus/prometheus.yml mount: cannot mkdir in /var/lib/docker/overlay2/572b247b007cd1f17541ae410ddf2e6b9a81a51f7e3e2e852420d6383f0d9a10/merged/etc/prometheus/pro
+
