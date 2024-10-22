@@ -4,7 +4,7 @@ This guide will help you set up Thanos to connect directly to Prometheus for que
 
 ## Prerequisites
 
-- Prometheus and Thanos Helm charts
+- Docker installed on your machine
 
 ## Steps
 
@@ -12,51 +12,11 @@ This guide will help you set up Thanos to connect directly to Prometheus for que
 
   Ensure Docker is running on your machine.
   
-```
+  ```sh
   docker info
-```
-
-2. **Add Helm Repositories**
-
-  ```sh
-  helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-  helm repo add bitnami https://charts.bitnami.com/bitnami
-  helm repo update
   ```
 
-3. **Install Prometheus** 22 10 2024
-
-  ```sh
-  helm install prometheus prometheus-community/prometheus
-  ```
-
-4. **Install Thanos**
-
-  ```sh
-  helm install thanos bitnami/thanos
-  ```
-
-5. **Configure Thanos Sidecar**
-
-  Edit the Prometheus deployment to include the Thanos sidecar:
-
-  ```yaml
-  extraContainers:
-    - name: thanos-sidecar
-    image: quay.io/thanos/thanos:latest
-    args:
-      - sidecar
-      - --tsdb.path=/data
-      - --prometheus.url=http://localhost:9090
-    ports:
-      - name: grpc
-      containerPort: 10901
-    volumeMounts:
-      - name: storage-volume
-      mountPath: /data
-  ```
-
-6. **Create Docker Compose File**
+2. **Create Docker Compose File**
 
   Create a `docker-compose.yml` file with the following content:
 
@@ -94,13 +54,13 @@ This guide will help you set up Thanos to connect directly to Prometheus for que
     storage-volume:
   ```
 
-7. **Start Services with Docker Compose**
+3. **Start Services with Docker Compose**
 
   ```sh
   docker-compose up -d
   ```
 
-8. **Access Thanos Query UI**
+4. **Access Thanos Query UI**
 
   Open your browser and go to `http://localhost:10902` to access the Thanos Query UI.
 
