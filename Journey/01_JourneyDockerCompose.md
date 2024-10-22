@@ -57,7 +57,7 @@ This guide will help you set up Thanos to connect directly to Prometheus for que
 3. **Start Services with Docker Compose**
 
   ```sh
-  docker-compose up -d
+  docker-compose -f /workspaces/PrometheusThanosConnection/SymbolsCode/Docker/docker-compose.yml up -d
   ```
 
 4. **Access Thanos Query UI**
