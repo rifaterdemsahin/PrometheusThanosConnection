@@ -4,7 +4,12 @@ Documentation for the Promethues as DataSource Project
 - 📂 **Index at the beginning of the files**
 - 📝 **Document as you progress**
 
-🌍 Real => 🌳 Environments => 🌌 Imaginary => 📐 Formulas => 🔣 Symbols => 🌀 Semblance
+🌍 Real => Your Job
+🌳 Environments => Use Cases
+🌌 Imaginary => What you learn 
+📐 Formulas => Steps implement
+🔣 Symbols => Components,Code and Map
+🌀 Semblance=> How it works/fails
+🚀 Journey => as the guide, mapped to various environments
 
-🚀 Journey as the guide, mapped to various environments
 - `/workspaces/PrometheusThanosConnection/Real/00_job.md`
