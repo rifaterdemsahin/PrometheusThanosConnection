@@ -19,7 +19,3 @@ git pull; git add . && git commit -m "cursor commit windows" && git push; clear
 ```bash
 git pull; git add . && git commit -m "cursor commit mac" && git push; clear
 ```
-
-
-
-
