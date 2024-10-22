@@ -17,6 +17,7 @@ Swap back to codespaces
    minikube start   
 ```
 
+chmod 777 /workspaces/PrometheusThanosConnection/7_Journey/02_JourneyMiniKube_setup.sh
 /workspaces/PrometheusThanosConnection/7_Journey/02_JourneyMiniKube_setup.sh
 
 
