@@ -1,11 +1,9 @@
-# Setting Up Thanos with Prometheus
+# Setting Up Thanos with Prometheus Docker
 
 This guide will help you set up Thanos to connect directly to Prometheus for querying metrics on Minikube.
 
 ## Prerequisites
 
-- Minikube installed on your machine
-- kubectl installed and configured
 - Prometheus and Thanos Helm charts
 
 ## Steps
