@@ -1,62 +1,55 @@
-# Setting Up Thanos with Prometheus
+# Setting Up Thanos with Prometheus in Minikube
 
-This guide will help you set up Thanos to connect directly to Prometheus for querying metrics.
+This guide will help you set up Thanos to connect directly to Prometheus for querying metrics using Minikube.
 
 ## Prerequisites
 
-- Docker installed on your machine
-- Prometheus instance running
+- Minikube installed on your machine
+- kubectl installed on your machine
+- Docker installed on your machine (for building images if needed)
 
-## Steps
+## Setup Instructions
 
-1. **Create a Docker Network**
+1. Start Minikube:   ```sh
+   minikube start   ```
 
-    ```sh
-    docker network create thanos-network
-    ```
+   C:\projects\PrometheusThanosConnection\PrometheusThanosConnection\7_Journey\02_JourneyMiniKube_setup.sh
+   
 
-2. **Run Prometheus**
+2. Apply the Kubernetes configurations:   ```sh
+   kubectl apply -f prometheus-config.yaml
+   kubectl apply -f prometheus-deployment.yaml
+   kubectl apply -f prometheus-service.yaml
+   kubectl apply -f thanos-sidecar-deployment.yaml
+   kubectl apply -f thanos-sidecar-service.yaml
+   kubectl apply -f thanos-query-deployment.yaml
+   kubectl apply -f thanos-query-service.yaml   ```
 
-    Create a `prometheus.yml` configuration file:
+3. Wait for the pods to be ready:   ```sh
+   kubectl wait --for=condition=Ready pod -l app=prometheus --timeout=120s
+   kubectl wait --for=condition=Ready pod -l app=thanos-sidecar --timeout=120s
+   kubectl wait --for=condition=Ready pod -l app=thanos-query --timeout=120s   ```
 
-    ```yaml
-    global:
-      scrape_interval: '15s'
+4. Port forward Prometheus and Thanos Query:   ```sh
+   kubectl port-forward svc/prometheus 9090:9090 &
+   kubectl port-forward svc/thanos-query 10902:9091 &   ```
 
-    scrape_configs:
-      - job_name: 'prometheus'
-         static_configs:
-            - targets: ['localhost:9090']
-    ```
+5. Access the UIs:
+   - Prometheus UI: http://localhost:9090
+   - Thanos Query UI: http://localhost:10902
 
-    Run Prometheus container:
+## Cleaning Up
 
-    ```sh
-    docker run -d --name prometheus --network thanos-network -p 9090:9090 -v $(pwd)/prometheus.yml:/etc/prometheus/prometheus.yml prom/prometheus
-    ```
+To stop the port forwarding and delete the Kubernetes resources:
 
-3. **Run Thanos Sidecar**
+1. Stop the port forwarding processes (usually by pressing Ctrl+C in the terminal where you ran them).
 
-    ```sh
-    docker run -d --name thanos-sidecar --network thanos-network \
-      -v $(pwd)/prometheus:/prometheus \
-      -v $(pwd)/thanos:/thanos \
-      quay.io/thanos/thanos:latest \
-      sidecar --tsdb.path /prometheus --prometheus.url http://prometheus:9090
-    ```
+2. Delete the Kubernetes resources:   ```sh
+   kubectl delete -f .   ```
 
-4. **Run Thanos Query**
+3. Stop Minikube:   ```sh
+   minikube stop   ```
 
-    ```sh
-    docker run -d --name thanos-query --network thanos-network -p 10902:10902 \
-      quay.io/thanos/thanos:latest \
-      query --http-address 0.0.0.0:10902 --store sdnsrv+_grpc._tcp.thanos-sidecar
-    ```
+## Troubleshooting
 
-5. **Access Thanos Query UI**
-
-    Open your browser and go to `http://localhost:10902` to access the Thanos Query UI.
-
-## Conclusion
-
-You have successfully set up Thanos to connect directly to Prometheus for querying metrics. You can now use the Thanos Query UI to explore your metrics.
+If you encounter any issues, you can check the status of the pods:
