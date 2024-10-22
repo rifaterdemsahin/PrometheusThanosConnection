@@ -164,6 +164,9 @@ data:
 
 #### Step 3: Deploy the Services
 
+
+/workspaces/PrometheusThanosConnection/7_Journey/02_JourneyMiniKube_setup.sh
+
 1. **Apply Kubernetes Manifests**:
   - Run the following commands to deploy the services:
 
