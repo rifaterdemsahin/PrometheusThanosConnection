@@ -165,3 +165,70 @@ spec:
       volumes:
       - name: prometheus-data
         emptyDir: {}
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+
+
+I understand that you're still encountering the same error after updating the Thanos sidecar deployment. Let's investigate further to identify the root cause of the image pull failure. Here are some additional steps we can take:
+
+1. Check the detailed event logs for the pod:
+
+```sh
+kubectl describe pod thanos-sidecar-5fdb4b74f8-9mf2f -n monitoring
+```
+
+Look for any specific error messages in the events section at the bottom of the output. This might provide more information about why the image pull is failing.
+
+2. Verify that the image exists and is accessible:
+
+Try pulling the image manually on one of your cluster nodes or on a machine with similar network access:
+
+```sh
+docker pull quay.io/thanos/thanos:v0.35.1
+```
+
+If this fails, it could indicate a network or registry access issue.
+
+3. Check if there are any ImagePullBackOff errors:
+
+```sh
+kubectl get pods -n monitoring | grep ImagePullBackOff
+```
+
+4. Verify your cluster's ability to pull images:
+
+Try creating a pod with a simple, public image to ensure your cluster can pull images in general:
+
+```yaml:test-pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-pod
+spec:
+  containers:
+  - name: test-container
+    image: nginx:latest
+```
+
+Apply this with:
+
+```sh
+kubectl apply -f test-pod.yaml -n monitoring
+```
+
+Then check its status:
+
+```sh
+kubectl get pod test-pod -n monitoring
+```
+
+5. Check for any cluster-wide network policies or restrictions that might be preventing image pulls.
+
+6. Ensure that your nodes have sufficient resources (CPU, memory, disk space) to pull and run the containers.
+
+7. If you're using a private cluster or have restricted network access, you might need to configure a pull-through cache or a local registry mirror.
+
+8. Check if there are any proxy settings that need to be configured for your cluster to access external resources.
+
+After performing these checks, please provide the output of the `kubectl describe pod` command and any other relevant information you find. This will help us pinpoint the exact cause of the image pull failure and provide a more targeted solution.
