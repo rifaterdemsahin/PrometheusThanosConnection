@@ -46,3 +46,133 @@ kubectl logs thanos-query-6994479c8-rf2rr
 # Check logs for thanos-sidecar pod
 kubectl logs thanos-sidecar-5fdb4b74f8-n7bdk
 ```
+
+
+Error from server (Forbidden): namespaces "default" is forbidden: this namespace may not be deleted
+@rifaterdemsahin ➜ /workspaces/PrometheusThanosConnection (main) $ kubectl logs thanos-query-6994479c8-rf2rr
+Error from server (BadRequest): container "thanos-query" in pod "thanos-query-6994479c8-rf2rr" is waiting to start: trying and failing to pull image
+@rifaterdemsahin ➜ /workspaces/PrometheusThanosConnection (main) $ 
+
+
+
+Error from server (BadRequest): container "thanos-query" in pod "thanos-query-6994479c8-rf2rr" is waiting to start: trying and failing to pull image
+@rifaterdemsahin ➜ /workspaces/PrometheusThanosConnection (main) $ kubectl logs thanos-sidecar-5fdb4b74f8-n7bdk
+Error from server (BadRequest): container "thanos-sidecar" in pod "thanos-sidecar-5fdb4b74f8-n7bdk" is waiting to start: trying and failing to pull image
+@rifaterdemsahin ➜ /workspaces/PrometheusThanosConnection (main) $ 
+
+
+### Explanation of Errors
+
+1. **Namespace Deletion Forbidden**:
+   - **Error**: `Error from server (Forbidden): namespaces "default" is forbidden: this namespace may not be deleted`
+   - **Reason**: The [`default`](command:_github.copilot.openSymbolFromReferences?%5B%22%22%2C%5B%7B%22uri%22%3A%7B%22scheme%22%3A%22file%22%2C%22authority%22%3A%22%22%2C%22path%22%3A%22%2Fworkspaces%2FPrometheusThanosConnection%2F6_Semblance%2FErrors%2FMinikubeSetup%2Fturningoninitialsetup.md%22%2C%22query%22%3A%22%22%2C%22fragment%22%3A%22%22%7D%2C%22pos%22%3A%7B%22line%22%3A50%2C%22character%22%3A43%7D%7D%5D%2C%22b069f8f8-96f6-48a7-88be-13b6a86de024%22%5D "Go to definition") namespace is a system namespace in Kubernetes and cannot be deleted. It is protected to ensure the stability and operation of the cluster.
+
+2. **Container Image Pull Failure**:
+   - **Error**: `Error from server (BadRequest): container "thanos-query" in pod "thanos-query-6994479c8-rf2rr" is waiting to start: trying and failing to pull image`
+   - **Reason**: The `thanos-query` container is unable to start because it is failing to pull the specified image. This could be due to:
+     - Incorrect image name or tag.
+     - Network issues preventing access to the image registry.
+     - Authentication issues with the image registry.
+
+3. **Repeated Container Image Pull Failure**:
+   - **Error**: `Error from server (BadRequest): container "thanos-sidecar" in pod "thanos-sidecar-5fdb4b74f8-n7bdk" is waiting to start: trying and failing to pull image`
+   - **Reason**: Similar to the `thanos-query` container, the `thanos-sidecar` container is also failing to pull the specified image for the same potential reasons.
+
+### Steps to Resolve
+
+1. **Namespace Deletion**:
+   - Do not attempt to delete the [`default`](command:_github.copilot.openSymbolFromReferences?%5B%22%22%2C%5B%7B%22uri%22%3A%7B%22scheme%22%3A%22file%22%2C%22authority%22%3A%22%22%2C%22path%22%3A%22%2Fworkspaces%2FPrometheusThanosConnection%2F6_Semblance%2FErrors%2FMinikubeSetup%2Fturningoninitialsetup.md%22%2C%22query%22%3A%22%22%2C%22fragment%22%3A%22%22%7D%2C%22pos%22%3A%7B%22line%22%3A50%2C%22character%22%3A43%7D%7D%5D%2C%22b069f8f8-96f6-48a7-88be-13b6a86de024%22%5D "Go to definition") namespace. Use a different namespace for your deployments if needed.
+
+2. **Fix Image Pull Issues**:
+   - **Verify Image Name and Tag**: Ensure the image name and tag specified in your deployment YAML files are correct.
+   - **Check Network Connectivity**: Ensure your Kubernetes nodes have network access to the image registry.
+   - **Authenticate with Registry**: If the image is in a private registry, ensure you have configured the necessary credentials.
+
+### Example Fix for Deployment YAML
+
+Ensure your deployment YAML files have the correct image names and tags. For example:
+
+#### `thanos-query-deployment.yaml`
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ 
+
+ name
+
+: thanos-query
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: thanos-query
+  template:
+    metadata:
+      labels:
+        app: thanos-query
+    spec:
+      containers:
+      - name: thanos-query
+        image: quay.io/thanos/thanos:v0.35.1  # Ensure this is the correct image and tag
+        args:
+        - query
+        - --http-address=0.0.0.0:9091
+        - --store=thanos-sidecar:10901
+        ports:
+        - containerPort: 9091
+```
+
+#### `thanos-sidecar-deployment.yaml`
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: thanos-sidecar
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: thanos-sidecar
+  template:
+    metadata:
+      labels:
+        app: thanos-sidecar
+    spec:
+      containers:
+      - name: thanos-sidecar
+        image: quay.io/thanos/thanos:v0.35.1  # Ensure this is the correct image and tag
+        args:
+        - sidecar
+        - --tsdb.path=/var/prometheus
+        - --prometheus.url=http://prometheus:9090
+        - --grpc-address=0.0.0.0:10901
+        - --http-address=0.0.0.0:10902
+        volumeMounts:
+        - name: prometheus-data
+          mountPath: /var/prometheus
+      volumes:
+      - name: prometheus-data
+        emptyDir: {}
+```
+
+### Verify and Redeploy
+
+1. **Apply Configurations**:
+   ```sh
+   kubectl apply -f prometheus-deployment.yaml
+   kubectl apply -f thanos-sidecar-deployment.yaml
+   kubectl apply -f thanos-query-deployment.yaml
+   ```
+
+2. **Check Pod Status**:
+   ```sh
+   kubectl get pods
+   ```
+
+3. **Check Logs**:
+   ```sh
+   kubectl logs <pod-name>
+   ```
+
+Ensure the pods are running and the containers are able to pull the images successfully.

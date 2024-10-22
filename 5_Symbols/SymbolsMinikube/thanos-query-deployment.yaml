@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: thanos-query
-        image: quay.io/thanos/thanos:latest
+        image: quay.io/thanos/thanos:v0.35.1  # Ensure this is the correct image and tag
         args:
         - query
         - --http-address=0.0.0.0:9091
