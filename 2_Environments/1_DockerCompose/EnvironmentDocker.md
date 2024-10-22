@@ -1,4 +1,5 @@
 Practical Testing Ground For the implementation
+Easy Implement and See and Debug
 
 ### Setting Up a Proof of Concept Project with Prometheus and Thanos in GitHub Codespaces 🚀
 
