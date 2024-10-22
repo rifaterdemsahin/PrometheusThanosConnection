@@ -1,0 +1,2 @@
+minikube ssh
+sudo bash -c 'echo "nameserver 8.8.8.8" > /etc/resolv.conf'
