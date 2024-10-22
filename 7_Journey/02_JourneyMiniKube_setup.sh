@@ -3,6 +3,7 @@
 # Start Minikube
 minikube start
 
+cd /workspaces/PrometheusThanosConnection/5_Symbols/SymbolsMinikube
 # Apply Kubernetes configurations
 kubectl apply -f prometheus-config.yaml
 kubectl apply -f prometheus-deployment.yaml
