@@ -1,10 +1,9 @@
 global:
   global:
+    scrape_interval: 15s
     external_labels:
-      cluster: 'my-cluster'
-      replica: 'prometheus-1'
-
-  scrape_interval: 15s
+      cluster: 'your-cluster-name'
+      region: 'your-region'
 
   scrape_configs:
     - job_name: 'prometheus'
