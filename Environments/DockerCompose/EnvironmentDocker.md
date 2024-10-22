@@ -1,3 +1,5 @@
+Practical Testing Ground For the implementation
+
 ### Setting Up a Proof of Concept Project with Prometheus and Thanos in GitHub Codespaces 🚀
 
 In the world of cloud-based development environments, GitHub Codespaces offers a powerful platform for setting up and testing various projects. Today, we'll walk through creating a proof of concept (PoC) project with Prometheus and Thanos, complete with emojis to make the process more engaging! 🌟
