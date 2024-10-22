@@ -1,32 +1,115 @@
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: thanos-sidecar
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: thanos-sidecar
-  template:
-    metadata:
-      labels:
-        app: thanos-sidecar
-    spec:
-      containers:
-      - name: thanos-sidecar
-        image: quay.io/thanos/thanos:v0.35.1  # Ensure this is the correct image and tag
-        args:
-        - sidecar
-        - --tsdb.path=/var/prometheus
-        - --prometheus.url=http://prometheus:9090
-        - --grpc-address=0.0.0.0:10901
-        - --http-address=0.0.0.0:10902
-        volumeMounts:
-        - name: prometheus-data
-          mountPath: /var/prometheus
-      volumes:
-      - name: prometheus-data
-        emptyDir: {}
+### Explanation of the Output
+
+1. **Image Pull Status**:
+   - **Message**: `Status: Image is up to date for quay.io/thanos/thanos:v0.35.1`
+   - **Meaning**: The image `quay.io/thanos/thanos:v0.35.1` is already up to date and available locally on the Minikube node.
+
+2. **Ping to quay.io**:
+   - **Command**: `ping quay.io`
+   - **Output**: 
+     ```
+     PING quay.io (44.193.245.216) 56(84) bytes of data.
+     ^C
+     --- quay.io ping statistics ---
+     51 packets transmitted, 0 received, 100% packet loss, time 51190ms
+     ```
+   - **Meaning**: The Minikube node is unable to reach `quay.io`. All ping packets are lost, indicating a network connectivity issue.
+
+3. **Ping to 8.8.8.8 (Google DNS)**:
+   - **Command**: `ping 8.8.8.8`
+   - **Output**:
+     ```
+     PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+     ^C
+     --- 8.8.8.8 ping statistics ---
+     3 packets transmitted, 0 received, 100% packet loss, time 2034ms
+     ```
+   - **Meaning**: The Minikube node is unable to reach `8.8.8.8`. All ping packets are lost, indicating a broader network connectivity issue.
+
+4. **Ping to 1.1.1.1 (Cloudflare DNS)**:
+   - **Command**: `ping 1.1.1.1`
+   - **Output**:
+     ```
+     PING 1.1.1.1 (1.1.1.1) 56(84) bytes of data.
+     ^C
+     --- 1.1.1.1 ping statistics ---
+     9 packets transmitted, 0 received, 100% packet loss, time 8179ms
+     ```
+   - **Meaning**: The Minikube node is unable to reach `1.1.1.1`. All ping packets are lost, further confirming network connectivity issues.
+
+5. **DNS Lookup for quay.io**:
+   - **Command**: `nslookup quay.io`
+   - **Output**:
+     ```
+     Server:         192.168.49.1
+     Address:        192.168.49.1#53
+
+     Non-authoritative answer:
+     Name:   quay.io
+     Address: 44.193.245.216
+     Name:   quay.io
+     Address: 52.6.80.86
+     Name:   quay.io
+     Address: 52.201.117.125
+     Name:   quay.io
+     Address: 54.237.126.132
+     Name:   quay.io
+     Address: 44.219.233.255
+     Name:   quay.io
+     Address: 3.209.241.141
+     Name:   quay.io
+     Address: 2600:1f18:483:cf02:134d:1c1c:9d68:b620
+     Name:   quay.io
+     Address: 2600:1f18:483:cf02:1f18:1ec:c916:a3dc
+     Name:   quay.io
+     Address: 2600:1f18:483:cf01:824e:a550:908c:ae65
+     Name:   quay.io
+     Address: 2600:1f18:483:cf00:6da2:db72:46f0:82bc
+     Name:   quay.io
+     Address: 2600:1f18:483:cf01:15e3:1415:a47b:4a75
+     ```
+   - **Meaning**: DNS resolution for `quay.io` is working correctly. The Minikube node can resolve the domain name to its IP addresses.
+
+### Conclusion
+
+The primary issue is network connectivity from the Minikube node to external IP addresses, including `quay.io`, `8.8.8.8`, and `1.1.1.1`. This is why the deployment works in Docker but not in Minikube.
+
+### Steps to Fix
+
+1. **Check Minikube Network Configuration**:
+   - Ensure Minikube is properly configured to access the internet.
+   - Restart Minikube with proper network settings:
+     ```sh
+     minikube stop
+     minikube delete
+     minikube start --vm-driver=<your-vm-driver> --network-plugin=cni
+     ```
+
+2. **Check Host Machine Network Configuration**:
+   - Ensure your host machine has internet access and proper network settings.
+   - Check for any firewall or proxy settings that might be blocking Minikube's network access.
+
+3. **Check Minikube VM Network Settings**:
+   - SSH into the Minikube VM and check network settings.
+   ```sh
+   minikube ssh
+   ```
+
+4. **Restart Docker Daemon in Minikube**:
+   - Ensure the Docker daemon inside Minikube is running.
+   ```sh
+   minikube ssh
+   sudo systemctl restart docker
+   ```
+
+5. **Use a Different DNS Server**:
+   - Configure Minikube to use a different DNS server if there are DNS resolution issues.
+   ```sh
+   minikube start --dns=8.8.8.8
+   ```
+
+After making these changes, try deploying the `thanos-sidecar` again and check if the image pull issue is resolved.After making these changes, try deploying the `thanos-sidecar` again and check if the image pull issue is resolved.
+
 
 rifaterdemsahin: how do i relate to the yaml  docker-compose.yml
 
@@ -1257,44 +1340,6 @@ GitHub Copilot: ### Possible Reasons Why It Works in Docker but Not in Minikube
    ping quay.io
    ```
 
-If the `ping quay.io` command does not return any response, it indicates that Minikube is unable to reach the `quay.io` registry. This could be due to network restrictions, DNS issues, or proxy settings.
-
-### Steps to Diagnose and Fix
-
-1. **Check Network Configuration**:
-    - Ensure Minikube has network access to external sites.
-    ```sh
-    minikube ssh
-    ping 8.8.8.8
-    ```
-
-2. **Check DNS Resolution**:
-    - Ensure DNS resolution is working inside Minikube.
-    ```sh
-    minikube ssh
-    nslookup quay.io
-    ```
-
-3. **Check Proxy Settings**:
-    - If you are behind a proxy, ensure Minikube is configured to use the proxy.
-    ```sh
-    minikube start --docker-env HTTP_PROXY=http://<proxy>:<port> --docker-env HTTPS_PROXY=https://<proxy>:<port>
-    ```
-
-4. **Check Firewall Rules**:
-    - Ensure there are no firewall rules blocking access to `quay.io`.
-
-5. **Restart Minikube**:
-    - Sometimes, restarting Minikube can resolve network issues.
-    ```sh
-    minikube stop
-    minikube start
-    ```
-
-By following these steps, you can diagnose and fix network connectivity issues in Minikube, ensuring it can pull images from external registries like `quay.io`.
-
-
-
 3. **Increase Minikube Resources**:
    - Increase the CPU and memory allocated to Minikube.
    ```sh
@@ -1359,6 +1404,251 @@ By following these steps, you can diagnose and fix network connectivity issues i
 ### Apply the Changes
 
 1. **Apply the Updated Deployment**:
+   ```sh
+   kubectl apply -f thanos-sidecar-deployment.yaml
+   ```
+
+2. **Check Pod Status**:
+   ```sh
+   kubectl get pods -n monitoring
+   ```
+
+3. **Check Logs**:
+   ```sh
+   kubectl logs thanos-sidecar-<pod-id> -n monitoring
+   ```
+
+Ensure the pod is running and the container is able to pull the image successfully.
+
+rifaterdemsahin: what does this mean > Status: Image is up to date for quay.io/thanos/thanos:v0.35.1
+quay.io/thanos/thanos:v0.35.1
+docker@minikube:~$    ```
+> 
+> ping quay.io
+> 
+> ^C
+docker@minikube:~$ ping quay.io                             
+PING quay.io (44.193.245.216) 56(84) bytes of data.
+^C
+--- quay.io ping statistics ---
+51 packets transmitted, 0 received, 100% packet loss, time 51190ms
+
+docker@minikube:~$ ping 8.8.8.8
+PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+ 
+^C
+--- 8.8.8.8 ping statistics ---
+3 packets transmitted, 0 received, 100% packet loss, time 2034ms
+
+docker@minikube:~$ ping 1.1.1.1
+PING 1.1.1.1 (1.1.1.1) 56(84) bytes of data.
+^C
+--- 1.1.1.1 ping statistics ---
+9 packets transmitted, 0 received, 100% packet loss, time 8179ms
+
+docker@minikube:~$   nslookup quay.io
+Server:         192.168.49.1
+Address:        192.168.49.1#53
+
+Non-authoritative answer:
+Name:   quay.io
+Address: 44.193.245.216
+Name:   quay.io
+Address: 52.6.80.86
+Name:   quay.io
+Address: 52.201.117.125
+Name:   quay.io
+Address: 54.237.126.132
+Name:   quay.io
+Address: 44.219.233.255
+Name:   quay.io
+Address: 3.209.241.141
+Name:   quay.io
+Address: 2600:1f18:483:cf02:134d:1c1c:9d68:b620
+Name:   quay.io
+Address: 2600:1f18:483:cf02:1f18:1ec:c916:a3dc
+Name:   quay.io
+Address: 2600:1f18:483:cf01:824e:a550:908c:ae65
+Name:   quay.io
+Address: 2600:1f18:483:cf00:6da2:db72:46f0:82bc
+Name:   quay.io
+Address: 2600:1f18:483:cf01:15e3:1415:a47b:4a75
+Name:   quay.io
+
+GitHub Copilot: ### Explanation of the Output
+
+1. **Image Pull Status**:
+   - **Message**: `Status: Image is up to date for quay.io/thanos/thanos:v0.35.1`
+   - **Meaning**: The image `quay.io/thanos/thanos:v0.35.1` is already up to date and available locally on the Minikube node.
+
+2. **Ping to quay.io**:
+   - **Command**: `ping quay.io`
+   - **Output**: 
+     ```
+     PING quay.io (44.193.245.216) 56(84) bytes of data.
+     ^C
+     --- quay.io ping statistics ---
+     51 packets transmitted, 0 received, 100% packet loss, time 51190ms
+     ```
+   - **Meaning**: The Minikube node is unable to reach `quay.io`. All ping packets are lost, indicating a network connectivity issue.
+
+3. **Ping to 8.8.8.8 (Google DNS)**:
+   - **Command**: `ping 8.8.8.8`
+   - **Output**:
+     ```
+     PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+     ^C
+     --- 8.8.8.8 ping statistics ---
+     3 packets transmitted, 0 received, 100% packet loss, time 2034ms
+     ```
+   - **Meaning**: The Minikube node is unable to reach `8.8.8.8`. All ping packets are lost, indicating a broader network connectivity issue.
+
+4. **Ping to 1.1.1.1 (Cloudflare DNS)**:
+   - **Command**: `ping 1.1.1.1`
+   - **Output**:
+     ```
+     PING 1.1.1.1 (1.1.1.1) 56(84) bytes of data.
+     ^C
+     --- 1.1.1.1 ping statistics ---
+     9 packets transmitted, 0 received, 100% packet loss, time 8179ms
+     ```
+   - **Meaning**: The Minikube node is unable to reach `1.1.1.1`. All ping packets are lost, further confirming network connectivity issues.
+
+5. **DNS Lookup for quay.io**:
+   - **Command**: `nslookup quay.io`
+   - **Output**:
+     ```
+     Server:         192.168.49.1
+     Address:        192.168.49.1#53
+
+     Non-authoritative answer:
+     Name:   quay.io
+     Address: 44.193.245.216
+     Name:   quay.io
+     Address: 52.6.80.86
+     Name:   quay.io
+     Address: 52.201.117.125
+     Name:   quay.io
+     Address: 54.237.126.132
+     Name:   quay.io
+     Address: 44.219.233.255
+     Name:   quay.io
+     Address: 3.209.241.141
+     Name:   quay.io
+     Address: 2600:1f18:483:cf02:134d:1c1c:9d68:b620
+     Name:   quay.io
+     Address: 2600:1f18:483:cf02:1f18:1ec:c916:a3dc
+     Name:   quay.io
+     Address: 2600:1f18:483:cf01:824e:a550:908c:ae65
+     Name:   quay.io
+     Address: 2600:1f18:483:cf00:6da2:db72:46f0:82bc
+     Name:   quay.io
+     Address: 2600:1f18:483:cf01:15e3:1415:a47b:4a75
+     ```
+   - **Meaning**: DNS resolution for `quay.io` is working correctly. The Minikube node can resolve the domain name to its IP addresses.
+
+### Conclusion
+
+The primary issue is network connectivity from the Minikube node to external IP addresses, including `quay.io`, `8.8.8.8`, and `1.1.1.1`. This is why the deployment works in Docker but not in Minikube.
+
+### Steps to Fix
+
+1. **Check Minikube Network Configuration**:
+   - Ensure Minikube is properly configured to access the internet.
+   - Restart Minikube with proper network settings:
+     ```sh
+     minikube stop
+     minikube delete
+     minikube start --vm-driver=<your-vm-driver> --network-plugin=cni
+     ```
+
+2. **Check Host Machine Network Configuration**:
+   - Ensure your host machine has internet access and proper network settings.
+   - Check for any firewall or proxy settings that might be blocking Minikube's network access.
+
+3. **Check Minikube VM Network Settings**:
+   - SSH into the Minikube VM and check network settings.
+   ```sh
+   minikube ssh
+   ```
+
+4. **Restart Docker Daemon in Minikube**:
+   - Ensure the Docker daemon inside Minikube is running.
+   ```sh
+   minikube ssh
+   sudo systemctl restart docker
+   ```
+
+5. **Use a Different DNS Server**:
+   - Configure Minikube to use a different DNS server if there are DNS resolution issues.
+   ```sh
+   minikube start --dns=8.8.8.8
+   ```
+
+After making these changes, try deploying the `thanos-sidecar` again and check if the image pull issue is resolved.After making these changes, try deploying the `thanos-sidecar` again and check if the image pull issue is resolved.
+
+rifaterdemsahin: @rifaterdemsahin ➜ /workspaces/PrometheusThanosConnection (main) $ minikube start --dns=8.8.8.8
+Error: unknown flag: --dns
+See 'minikube start --help' for usage.
+
+GitHub Copilot: The `--dns` flag is not a valid option for the `minikube start` command. Instead, you can configure DNS settings within the Minikube VM or use a different approach to ensure proper DNS resolution.
+
+### Steps to Fix DNS Resolution in Minikube
+
+1. **Restart Minikube with Proper Network Settings**:
+   - Ensure Minikube is properly configured to access the internet.
+   ```sh
+   minikube stop
+   minikube delete
+   minikube start --vm-driver=<your-vm-driver>
+   ```
+
+2. **Configure DNS Manually in Minikube VM**:
+   - SSH into the Minikube VM and configure DNS settings manually.
+   ```sh
+   minikube ssh
+   sudo bash -c 'echo "nameserver 8.8.8.8" > /etc/resolv.conf'
+   ```
+
+3. **Check Network Connectivity**:
+   - Ensure the Minikube VM has network access.
+   ```sh
+   minikube ssh
+   ping quay.io
+   ping 8.8.8.8
+   ```
+
+### Example Commands
+
+1. **Stop and Delete Minikube**:
+   ```sh
+   minikube stop
+   minikube delete
+   ```
+
+2. **Start Minikube**:
+   ```sh
+   minikube start --vm-driver=<your-vm-driver>
+   ```
+
+3. **Configure DNS in Minikube VM**:
+   ```sh
+   minikube ssh
+   sudo bash -c 'echo "nameserver 8.8.8.8" > /etc/resolv.conf'
+   ```
+
+4. **Check Network Connectivity**:
+   ```sh
+   minikube ssh
+   ping quay.io
+   ping 8.8.8.8
+   ```
+
+### Redeploy the Thanos Sidecar
+
+After ensuring proper DNS resolution and network connectivity, redeploy the `thanos-sidecar`:
+
+1. **Apply the Deployment**:
    ```sh
    kubectl apply -f thanos-sidecar-deployment.yaml
    ```
