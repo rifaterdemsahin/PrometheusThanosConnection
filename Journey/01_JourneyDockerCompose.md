@@ -24,7 +24,7 @@ This guide will help you set up Thanos to connect directly to Prometheus for que
   helm repo update
   ```
 
-3. **Install Prometheus**
+3. **Install Prometheus** 22 10 2024
 
   ```sh
   helm install prometheus prometheus-community/prometheus
