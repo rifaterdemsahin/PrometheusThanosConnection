@@ -1,62 +1,72 @@
 # Setting Up Thanos with Prometheus
 
-This guide will help you set up Thanos to connect directly to Prometheus for querying metrics.
+This guide will help you set up Thanos to connect directly to Prometheus for querying metrics on Minikube.
 
 ## Prerequisites
 
-- Docker installed on your machine
-- Prometheus instance running
+- Minikube installed on your machine
+- kubectl installed and configured
+- Prometheus and Thanos Helm charts
 
 ## Steps
 
-1. **Create a Docker Network**
+1. **Start Minikube**
 
     ```sh
-    docker network create thanos-network
+    minikube start
     ```
 
-2. **Run Prometheus**
+2. **Add Helm Repositories**
 
-    Create a `prometheus.yml` configuration file:
+    ```sh
+    helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+    helm repo add bitnami https://charts.bitnami.com/bitnami
+    helm repo update
+    ```
+
+3. **Install Prometheus**
+
+    ```sh
+    helm install prometheus prometheus-community/prometheus
+    ```
+
+4. **Install Thanos**
+
+    ```sh
+    helm install thanos bitnami/thanos
+    ```
+
+5. **Configure Thanos Sidecar**
+
+    Edit the Prometheus deployment to include the Thanos sidecar:
 
     ```yaml
-    global:
-      scrape_interval: '15s'
-
-    scrape_configs:
-      - job_name: 'prometheus'
-         static_configs:
-            - targets: ['localhost:9090']
+    extraContainers:
+      - name: thanos-sidecar
+        image: quay.io/thanos/thanos:latest
+        args:
+          - sidecar
+          - --tsdb.path=/data
+          - --prometheus.url=http://localhost:9090
+        ports:
+          - name: grpc
+            containerPort: 10901
+        volumeMounts:
+          - name: storage-volume
+            mountPath: /data
     ```
 
-    Run Prometheus container:
+6. **Expose Thanos Query**
 
     ```sh
-    docker run -d --name prometheus --network thanos-network -p 9090:9090 -v $(pwd)/prometheus.yml:/etc/prometheus/prometheus.yml prom/prometheus
+    kubectl port-forward svc/thanos-query 10902:10902
     ```
 
-3. **Run Thanos Sidecar**
-
-    ```sh
-    docker run -d --name thanos-sidecar --network thanos-network \
-      -v $(pwd)/prometheus:/prometheus \
-      -v $(pwd)/thanos:/thanos \
-      quay.io/thanos/thanos:latest \
-      sidecar --tsdb.path /prometheus --prometheus.url http://prometheus:9090
-    ```
-
-4. **Run Thanos Query**
-
-    ```sh
-    docker run -d --name thanos-query --network thanos-network -p 10902:10902 \
-      quay.io/thanos/thanos:latest \
-      query --http-address 0.0.0.0:10902 --store sdnsrv+_grpc._tcp.thanos-sidecar
-    ```
-
-5. **Access Thanos Query UI**
+7. **Access Thanos Query UI**
 
     Open your browser and go to `http://localhost:10902` to access the Thanos Query UI.
 
 ## Conclusion
 
-You have successfully set up Thanos to connect directly to Prometheus for querying metrics. You can now use the Thanos Query UI to explore your metrics.
+You have successfully set up Thanos to connect directly to Prometheus for querying metrics on Minikube. You can now use the Thanos Query UI to explore your metrics.
+
