@@ -8,3 +8,5 @@ Sub Job (Steps To Achieve)
 - 🌐 Set up Thanos Querier to query metrics from one remote write Prometheus instances (waiting) ⏳
 - 🛠️ Integrate Thanos Store for long-term storage (waiting) ⏳
 - 📈 Create dashboards in Grafana to visualize Thanos metrics (waiting) ⏳
+-- Get values file with the remote write on protheus and thanos
+-- Get the steps to install it
