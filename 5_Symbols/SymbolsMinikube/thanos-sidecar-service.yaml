@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: thanos-sidecar
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: thanos-sidecar
+  template:
+    metadata:
+      labels:
+        app: thanos-sidecar
+    spec:
+      containers:
+      - name: thanos-sidecar
+        image: quay.io/thanos/thanos:latest
+        args:
+        - sidecar
+        - --tsdb.path=/var/prometheus
+        - --prometheus.url=http://prometheus:9090
+        - --grpc-address=0.0.0.0:10901
+        - --http-address=0.0.0.0:10902
+        volumeMounts:
+        - name: prometheus-data
+          mountPath: /var/prometheus
+      volumes:
+      - name: prometheus-data
+        emptyDir: {}
