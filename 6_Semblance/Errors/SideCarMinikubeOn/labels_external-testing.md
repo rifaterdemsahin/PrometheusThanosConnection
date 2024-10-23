@@ -50,6 +50,20 @@ Workspace: ### Plan
          region: "your-region"
       ```
 
+## Test 6: Force Apply Prometheus Configuration
+1. **Description**: Ensure that the Prometheus configuration is forcefully applied to the Minikube cluster.
+2. **Expected Result**: The Prometheus configuration should be applied without errors.
+3. **Test Steps**:
+  - Run the following command to force apply the Prometheus configuration:
+    ```sh
+    kubectl apply -n monitoring -f /workspaces/PrometheusThanosConnection/5_Symbols/SymbolsMinikube/prometheus-config.yaml --force
+    ```
+  - Verify that the configuration is applied successfully by checking the status of the Prometheus pods.
+  - Example command to check pod status:
+    ```sh
+    kubectl get pods -n monitoring
+    ```
+
 ## Test 3: Check Thanos Sidecar Logs for External Labels
 1. **Description**: Ensure that the Thanos sidecar logs indicate successful loading of external labels.
 2. **Expected Result**: The logs should show that the external labels are loaded successfully.
