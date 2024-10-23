@@ -22,3 +22,7 @@ thanos-sidecar   0/1     1            0           8m41s
 
 
  git pull; git add . && git commit -m "Refine task priorities in kanban board" && git push;clear.exe 
+
+
+
+ 
