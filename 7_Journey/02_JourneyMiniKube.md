@@ -58,6 +58,8 @@ kubectl delete pod thanos-sidecar-68996566c8-swq67
   
    ```
 
+   kubectl get pods -A
+
 
 3. Wait for the pods to be ready:   ```sh
    kubectl wait --for=condition=Ready pod -l app=prometheus --timeout=120s
