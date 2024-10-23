@@ -29,3 +29,6 @@ kubectl port-forward svc/thanos-query -n monitoring 10902:9091 &
 
 echo "Setup complete. Prometheus is available at http://localhost:9090"
 echo "Thanos Query is available at http://localhost:10902"
+
+
+# git pull; git add . && git commit -m "Refine task priorities in copilot" && git push;clear.exe git pull; git add . && git commit -m "Refine task priorities in copilot" && git push;clear.exe 
