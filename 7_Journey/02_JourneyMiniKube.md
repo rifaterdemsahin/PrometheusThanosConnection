@@ -18,7 +18,8 @@ Swap back to codespaces
 ```
 
 chmod 777 /workspaces/PrometheusThanosConnection/7_Journey/02_JourneyMiniKube_setup.sh
-cd /workspaces/PrometheusThanosConnection
+cd /workspaces/PrometheusThanosConnection/5_Symbols/SymbolsMinikube
+
 ```sh
 # Delete the problematic pods
 kubectl delete pod thanos-query-5df49cc4c4-wmxqb
@@ -34,6 +35,29 @@ kubectl delete pod thanos-sidecar-68996566c8-swq67
    kubectl apply -n monitoring -f thanos-sidecar-service.yaml
    kubectl apply -n monitoring -f thanos-query-deployment.yaml
    kubectl apply -n monitoring -f thanos-query-service.yaml
+
+   ```sh
+   # Delete the applied Kubernetes configurations
+   kubectl delete -n monitoring -f prometheus-config.yaml
+   kubectl delete -n monitoring -f prometheus-deployment.yaml
+   kubectl delete -n monitoring -f prometheus-service.yaml
+   kubectl delete -n monitoring -f thanos-sidecar-deployment.yaml
+   kubectl delete -n monitoring -f thanos-sidecar-service.yaml
+   kubectl delete -n monitoring -f thanos-query-deployment.yaml
+   kubectl delete -n monitoring -f thanos-query-service.yaml
+  
+     # Delete the applied Kubernetes configurations
+   kubectl delete -n default -f prometheus-config.yaml
+   kubectl delete -n default -f prometheus-deployment.yaml
+   kubectl delete -n default -f prometheus-service.yaml
+   kubectl delete -n default -f thanos-sidecar-deployment.yaml
+   kubectl delete -n default -f thanos-sidecar-service.yaml
+   kubectl delete -n default -f thanos-query-deployment.yaml
+   kubectl delete -n default -f thanos-query-service.yaml
+  
+  
+   ```
+
 
 3. Wait for the pods to be ready:   ```sh
    kubectl wait --for=condition=Ready pod -l app=prometheus --timeout=120s
