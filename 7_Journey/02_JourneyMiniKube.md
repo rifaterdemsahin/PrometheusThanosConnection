@@ -76,7 +76,7 @@ kubectl delete pod thanos-sidecar-68996566c8-swq67
 
 Reboot for testing and errors
    kubectl delete namespace monitoring
-
+/workspaces/PrometheusThanosConnection/7_Journey/02_JourneyMiniKube_setup.sh
 
 4. Port forward Prometheus and Thanos Query:   ```sh
    kubectl port-forward svc/prometheus 9090:9090 &
