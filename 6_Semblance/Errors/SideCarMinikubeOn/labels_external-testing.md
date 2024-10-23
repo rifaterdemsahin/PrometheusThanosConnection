@@ -107,3 +107,34 @@ Workspace: ### Plan
             cluster: "your-cluster-name"
             region: "your-region"
       ```
+  ## Test 7: Delete Monitoring Namespace
+  1. **Description**: Ensure that the monitoring namespace can be deleted without errors.
+  2. **Expected Result**: The monitoring namespace should be deleted successfully.
+  3. **Test Steps**:
+    - Run the following command to delete the monitoring namespace:
+      ```sh
+      kubectl delete namespace monitoring
+      ```
+    - Verify that the namespace is deleted by checking the list of namespaces.
+    - Example command to check namespaces:
+      ```sh
+      kubectl get namespaces
+      ```
+
+      chmod 777 /workspaces/PrometheusThanosConnection/7_Journey/02_JourneyMiniKube_setup.sh
+
+
+      /workspaces/PrometheusThanosConnection/7_Journey/02_JourneyMiniKube_setup.sh
+
+      @rifaterdemsahin ➜ /workspaces/PrometheusThanosConnection (main) $ kubectl get pods -A
+NAMESPACE     NAME                               READY   STATUS             RESTARTS        AGE
+kube-system   coredns-6f6b679f8f-qbp28           1/1     Running            1 (7m10s ago)   56m
+kube-system   etcd-minikube                      1/1     Running            1 (7m15s ago)   56m
+kube-system   kube-apiserver-minikube            1/1     Running            1 (7m5s ago)    56m
+kube-system   kube-controller-manager-minikube   1/1     Running            1 (7m15s ago)   56m
+kube-system   kube-proxy-rgxg4                   1/1     Running            1 (7m15s ago)   56m
+kube-system   kube-scheduler-minikube            1/1     Running            1 (7m15s ago)   56m
+kube-system   storage-provisioner                1/1     Running            3 (7m1s ago)    56m
+monitoring    prometheus-5b95b85759-6nckk        1/1     Running            0               6m53s
+monitoring    thanos-query-5df49cc4c4-kmxg6      1/1     Running            0               6m53s
+monitoring    thanos-sidecar-7f9bb547b-qdl8g     0/1     ImagePullBackOff   0               6m53s
