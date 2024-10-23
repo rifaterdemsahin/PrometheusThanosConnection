@@ -1,10 +1,17 @@
 #!/bin/bash
 
-# List all files excluding .git files and directories
-files=$(find . -type f -not -path '*/\.git/*' | sort)
+# Parameters
+report="./file_report.txt"
+exclude_paths=('*/\.git/*' '*/\.vscode/*')
+
+# List all files excluding specified paths
+find_command="find . -type f"
+for path in "${exclude_paths[@]}"; do
+    find_command+=" -not -path '$path'"
+done
+files=$(eval "$find_command" | sort)
 
 # Create a report file in the current folder
-report="./file_report.txt"
 echo "File Index Report" > $report
 echo "=================" >> $report
 
