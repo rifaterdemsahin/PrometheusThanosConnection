@@ -61,10 +61,16 @@ kubectl delete pod thanos-sidecar-68996566c8-swq67
    kubectl get pods -A
 
 
-3. Wait for the pods to be ready:   ```sh
-   kubectl wait --for=condition=Ready pod -l app=prometheus --timeout=120s
-   kubectl wait --for=condition=Ready pod -l app=thanos-sidecar --timeout=120s
-   kubectl wait --for=condition=Ready pod -l app=thanos-query --timeout=120s   ```
+3. Wait for the pods to be ready:   
+   ```sh
+      ```sh
+      kubectl wait -n monitoring --for=condition=Ready pod -l app=prometheus --timeout=120s
+      kubectl wait -n monitoring --for=condition=Ready pod -l app=thanos-sidecar --timeout=120s
+      kubectl wait -n monitoring --for=condition=Ready pod -l app=thanos-query --timeout=120s
+      ```
+
+    
+
 
 4. Port forward Prometheus and Thanos Query:   ```sh
    kubectl port-forward svc/prometheus 9090:9090 &
