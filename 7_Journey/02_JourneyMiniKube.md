@@ -74,6 +74,9 @@ kubectl delete pod thanos-sidecar-68996566c8-swq67
    kubectl get deployments -n monitoring
    ```
 
+Reboot for testing and errors
+   kubectl delete namespace monitoring
+
 
 4. Port forward Prometheus and Thanos Query:   ```sh
    kubectl port-forward svc/prometheus 9090:9090 &

@@ -138,3 +138,33 @@ kube-system   storage-provisioner                1/1     Running            3 (7
 monitoring    prometheus-5b95b85759-6nckk        1/1     Running            0               6m53s
 monitoring    thanos-query-5df49cc4c4-kmxg6      1/1     Running            0               6m53s
 monitoring    thanos-sidecar-7f9bb547b-qdl8g     0/1     ImagePullBackOff   0               6m53s
+
+
+```sh
+kubectl logs thanos-sidecar-7f9bb547b-qdl8g -n monitoring
+```
+
+@rifaterdemsahin ➜ /workspaces/PrometheusThanosConnection (main) $ kubectl logs thanos-sidecar-7f9bb547b-qdl8g -n monitoring
+Error from server (BadRequest): container "thanos-sidecar" in pod "tha
+
+## Alternatives to Check Thanos Sidecar Logs
+
+1. **Describe Pod to Check Events**
+  ```sh
+  kubectl describe pod thanos-sidecar-7f9bb547b-qdl8g -n monitoring
+  ```
+
+2. **Check All Logs in the Namespace**
+  ```sh
+  kubectl logs -l app=thanos-sidecar -n monitoring --all-containers=true
+  ```
+
+3. **Get Pod Status**
+  ```sh
+  kubectl get pod thanos-sidecar-7f9bb547b-qdl8g -n monitoring -o yaml
+  ```
+
+4. **Check Container Logs with Previous Flag**
+  ```sh
+  kubectl logs thanos-sidecar-7f9bb547b-qdl8g -n monitoring --previous
+  ```
