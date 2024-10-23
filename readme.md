@@ -13,3 +13,4 @@ Documentation for the Promethues as DataSource Project
 🚀 Journey => as the guide, mapped to various environments
 
 - `/workspaces/PrometheusThanosConnection/Real/00_job.md`
+git pull; git add . && git commit -m "Refine task priorities in kanban board" && git push;clear.exe 
