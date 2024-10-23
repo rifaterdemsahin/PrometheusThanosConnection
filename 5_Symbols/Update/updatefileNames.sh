@@ -2,7 +2,7 @@
 
 # Parameters
 WORKSPACE_DIR="/workspaces/PrometheusAsDataSource/"
-EXCLUDE_DIRS=("./.git/*" "./Symbolic/*")
+EXCLUDE_DIRS=("./.git/*" "./5_Symbols/*")
 COUNTER_FORMAT="%02d"
 
 # List all files in the current directory and subdirectories, excluding the specified directories
