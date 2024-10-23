@@ -69,7 +69,10 @@ kubectl delete pod thanos-sidecar-68996566c8-swq67
       kubectl wait -n monitoring --for=condition=Ready pod -l app=thanos-query --timeout=120s
       ```
 
-    
+   ```sh
+   # Show the deployments in the monitoring namespace
+   kubectl get deployments -n monitoring
+   ```
 
 
 4. Port forward Prometheus and Thanos Query:   ```sh
