@@ -15,10 +15,10 @@ index=1
 for file in $files; do
     filename=$(basename "$file")
     folder=$(dirname "$file")
-    echo "$index. $filename >>>>>>>>>>> $folder" >> $report
+    prefix=$(echo "$filename" | grep -o '^[0-9]*')
+    rest_of_filename=$(echo "$filename" | sed "s/^[0-9]*//")
+    echo "$prefix $rest_of_filename >>>>>>>>>>> $folder" >> $report
     index=$((index + 1))
-creation_time=$(stat -c %y "$file")
-echo "$index. $filename >>>>>>>>>>> $folder >>>>>>>>>>> $creation_time" >> $report
 done
 
 # Display the report content
