@@ -19,9 +19,9 @@ kubectl apply -f thanos-query-service.yaml -n monitoring
 
 # Wait for pods to be ready in the monitoring namespace
 echo "Waiting for pods to be ready..."
-kubectl wait --for=condition=Ready pod -n monitoring --timeout=120s
-kubectl wait --for=condition=Ready pod -n monitoring --timeout=120s
-kubectl wait --for=condition=Ready pod -n monitoring --timeout=120s
+kubectl wait --for=condition=Ready pod -l app=prometheus -n monitoring --timeout=120s
+kubectl wait --for=condition=Ready pod -l app=thanos-sidecar -n monitoring --timeout=120s
+kubectl wait --for=condition=Ready pod -l app=thanos-query -n monitoring --timeout=120s
 
 # Port forward Prometheus and Thanos Query in the monitoring namespace
 kubectl port-forward svc/prometheus -n monitoring 9090:9090 &

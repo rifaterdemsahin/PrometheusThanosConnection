@@ -1,0 +1,2 @@
+kubectl delete namespace monitoring
+/workspaces/PrometheusThanosConnection/7_Journey/02_JourneyMiniKube_setup.sh
