@@ -121,3 +121,65 @@ Events:
   Normal   Started    10m (x5 over 12m)     kubelet            Started container thanos-sidecar
   Warning  BackOff    2m23s (x44 over 11m)  kubelet            Back-off restarting failed container thanos-sidecar in pod thanos-sidecar-68996566c8-wzksf_monitoring(fa7e1f17-bedb-43f1-8eb4-22b99e7dc617)
 @rifaterdemsahin ➜ /workspaces/PrometheusThanosConnection (main) $ 
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+
+### Explanation of the Pod Status
+
+The `kubectl describe pod thanos-sidecar-68996566c8-wzksf -n monitoring` command provides detailed information about the pod `thanos-sidecar-68996566c8-wzksf` in the `monitoring` namespace. Here are some key points to understand from the output:
+
+- **Pod Status**: The pod is in a `Running` state, but the container within it is experiencing a `CrashLoopBackOff` state. This means the container is repeatedly crashing and being restarted by Kubernetes.
+- **Container State**: The container `thanos-sidecar` is in a `Waiting` state with the reason `CrashLoopBackOff`. The last state of the container was `Terminated` with an `Error` reason and an exit code of `1`, indicating that the container encountered an error and exited.
+- **Restart Count**: The container has been restarted 7 times, which is a clear sign of a crash loop.
+- **Events**: The events section shows that the container has been successfully scheduled, pulled, created, and started multiple times, but it keeps failing and entering a back-off state.
+
+### Possible Causes and Next Steps
+
+1. **Application Error**: The container might be crashing due to an error in the application code. Check the application logs for any error messages.
+2. **Resource Limits**: Ensure that the pod has sufficient CPU and memory resources allocated.
+3. **Configuration Issues**: Verify that the configuration files and environment variables are correctly set.
+4. **Dependencies**: Check if the container has all the necessary dependencies and services available.
+
+By addressing these potential issues, you can resolve the `CrashLoopBackOff` state and stabilize the pod.
+
+>>>>>
+
+### Increasing the Number of Cores in GitHub Codespaces
+
+To increase the number of cores in your GitHub Codespaces environment, follow these steps:
+
+1. **Open Codespaces Settings**:
+    - Navigate to your GitHub repository.
+    - Click on the `Code` button and then select `Codespaces`.
+    - Click on the `...` (three dots) next to your active Codespace and select `Configure`.
+
+2. **Select a Machine Type**:
+    - In the configuration settings, you will see an option to choose the machine type.
+    - Select a machine type with more cores. For example, you can choose a `4-core` or `8-core` machine depending on your requirements.
+
+3. **Save and Restart**:
+    - Save the configuration changes.
+    - Restart your Codespace to apply the new settings.
+
+### Example Configuration
+
+Here is an example of how you can specify the machine type in your `.devcontainer.json` file:
+
+```json
+{
+  "name": "My Codespace",
+  "image": "mcr.microsoft.com/vscode/devcontainers/base:0-focal",
+  "settings": {},
+  "extensions": [],
+  "postCreateCommand": "echo 'Setup complete!'",
+  "remoteUser": "vscode",
+  "features": {},
+  "hostRequirements": {
+     "cpus": 4,
+     "memory": "8gb"
+  }
+}
+```
+
+By following these steps, you can increase the number of cores available in your GitHub Codespaces environment, allowing for better performance and faster execution of tasks.
