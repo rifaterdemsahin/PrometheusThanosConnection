@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # Parameters
-report="./file_report.txt"
+report="./selflearning_report.txt"
+creation_date=$(date +"%Y-%m-%d")
 exclude_paths=('*/\.git/*' '*/\.vscode/*')
 
 # List all files excluding specified paths
@@ -12,12 +13,12 @@ done
 files=$(eval "$find_command")
 
 # Separate files into those with numeric prefixes and those without
-files_with_numbers=$(echo "$files" | grep -E '/[0-9]+[^/]*$' | sort)
+files_with_numbers=$(echo "$files" | grep -E '/[0-9]+[^/]*$' | sort -V)
 files_without_numbers=$(echo "$files" | grep -v -E '/[0-9]+[^/]*$')
 
 # Create a report file in the current folder
-echo "File Index Report" > $report
-echo "=================" >> $report
+echo "Self Learning Report" > $report
+echo "====================" >> $report
 
 # Index counter
 index=1
