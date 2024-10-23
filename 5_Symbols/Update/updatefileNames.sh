@@ -1,5 +1,6 @@
 #!/bin/bash
-
+# chmod 777 /workspaces/PrometheusThanosConnection/5_Symbols/Update/updatefileNames.sh
+# ./workspaces/PrometheusThanosConnection/5_Symbols/Update/updatefileNames.sh
 set -x  # Enable debugging
 
 # Parameters
