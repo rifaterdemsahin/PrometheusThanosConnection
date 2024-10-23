@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: thanos-sidecar
-        image: quay.io/thanos/thanos:v0.35.1  # Ensure this is the correct image and tag
+        image: quay.io/thanos/thanos:v0.35.1  # Using a specific version as recommended
         args:
         - sidecar
         - --tsdb.path=/var/prometheus

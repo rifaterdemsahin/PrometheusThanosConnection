@@ -232,3 +232,81 @@ kubectl get pod test-pod -n monitoring
 8. Check if there are any proxy settings that need to be configured for your cluster to access external resources.
 
 After performing these checks, please provide the output of the `kubectl describe pod` command and any other relevant information you find. This will help us pinpoint the exact cause of the image pull failure and provide a more targeted solution.
+
+>>>>>>>>>>>>>>
+
+
+Based on the output you provided, there are a few issues that are causing the image pull to fail. Let's address them one by one:
+
+1. Docker daemon connection issue:
+```
+Warning  InspectFailed   3m40s  kubelet  Failed to inspect image "quay.io/thanos/thanos:latest": rpc error: code = Unknown desc = Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?
+```
+This error suggests that the kubelet is unable to connect to the Docker daemon. Since you're using Minikube, this might be due to the container runtime configuration.
+
+2. Image not found:
+```
+Warning  Failed  3m3s (x3 over 3m56s)  kubelet  Failed to pull image "quay.io/thanos/thanos:latest": Error response from daemon: manifest for quay.io/thanos/thanos:latest not found: manifest unknown: manifest unknown
+```
+This error indicates that the `latest` tag for the Thanos image is not available or cannot be found.
+
+To resolve these issues, try the following steps:
+
+1. Use a specific version tag instead of `latest`:
+Update your deployment YAML to use a specific version of Thanos. For example:
+
+```yaml:thanos-sidecar-deployment.yaml
+// ... existing code ...
+spec:
+  containers:
+  - name: thanos-sidecar
+    image: quay.io/thanos/thanos:v0.35.1  # Use a specific version instead of 'latest'
+// ... existing code ...
+```
+
+2. Verify Minikube's container runtime:
+Check which container runtime Minikube is using:
+
+```sh
+minikube profile list
+```
+
+If it's not using Docker, you might want to start Minikube with Docker specifically:
+
+```sh
+minikube start --driver=docker
+```
+
+3. Ensure Minikube has internet access:
+Try pulling an image manually within Minikube:
+
+```sh
+minikube ssh
+docker pull quay.io/thanos/thanos:v0.35.1
+```
+
+If this fails, it could indicate network issues within Minikube.
+
+4. Update and restart Minikube:
+Sometimes, updating Minikube and restarting it can resolve issues:
+
+```sh
+minikube stop
+minikube delete
+minikube start --driver=docker
+```
+
+5. Apply the updated deployment:
+After making these changes, apply the updated deployment:
+
+```sh
+kubectl apply -f thanos-sidecar-deployment.yaml -n monitoring
+```
+
+6. Check the pod status again:
+```sh
+kubectl get pods -n monitoring
+kubectl describe pod <thanos-sidecar-pod-name> -n monitoring
+```
+
+These steps should help resolve the image pull issues. If you're still encountering problems, please provide the output of these commands, especially the result of manually pulling the image within Minikube and the updated pod description after applying these changes.
