@@ -20,3 +20,5 @@ This section contains the code snippets and examples implemented throughout the 
 
 🌀 Semblance: Errors Found in the Process
 Learning often involves encountering errors and overcoming them. Here, we document all notable mistakes and their solutions to enhance the learning experience.
+
+git pull; git add . && git commit -m "Refine task priorities in kanban board" && git push;clear.exe 
